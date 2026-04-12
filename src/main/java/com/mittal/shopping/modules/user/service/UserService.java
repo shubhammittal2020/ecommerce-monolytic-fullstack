@@ -6,6 +6,8 @@ import com.mittal.shopping.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.mittal.shopping.modules.user.entity.User;
 
@@ -19,9 +21,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-//    public UserService(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -49,11 +50,17 @@ public class UserService {
     public UserResponse registerUser(UserRegisterRequest request) {
         User user = new User();
 
-        if (!isEmailExist(request.getEmail())) {
+        if (isEmailExist(request.getEmail())) {
+            log.info("email id is not available");
+            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+        }
+        else {
             // Save user to the database
             user.setName(request.getName());
             user.setEmail(request.getEmail());
-            user.setPassword(request.getPassword());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole("DEV");
             user.setCreatedAt("WEB");
 
@@ -61,14 +68,11 @@ public class UserService {
 
             log.info("User registered successfully");
         }
-        else {
-            log.info("email id is not available");
-        }
 
         UserResponse userResponse = new UserResponse();
-        userResponse.setId(4L);
-        userResponse.setName(request.getName());
-        userResponse.setEmail(request.getEmail());
+        userResponse.setId(user.getId());
+        userResponse.setName(user.getName());
+        userResponse.setEmail(user.getEmail());
 
         return userResponse;
     }
@@ -83,7 +87,11 @@ public class UserService {
     }
 
     public Optional<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        Optional<User> a = userRepository.findByEmail(email);
+        if (a.isPresent()) {
+            return a;
+        }
+        return null;
     }
 
     public List<User> getAllUsers() {

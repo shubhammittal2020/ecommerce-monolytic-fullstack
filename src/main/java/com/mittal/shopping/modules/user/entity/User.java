@@ -1,8 +1,8 @@
 package com.mittal.shopping.modules.user.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 
@@ -11,15 +11,17 @@ import lombok.Data;
 public class User {
 
     @Id
-    int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    String name;
+    private String name;
 
-    @Column(unique = true)
-    String email;
+    @Email
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    String password;
-    String role;
-    String createdAt;
+    private String password;
+    private String role;
+    private String createdAt;
 
 }
