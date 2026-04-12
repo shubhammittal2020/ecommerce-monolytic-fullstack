@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.mittal.shopping.modules.user.entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -22,31 +26,37 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public boolean isEmailExist(String emailId) {
-        // TODO: Check user in the database
-        //userRepository.findOne(emailId);
-        return true;
+        // Check user email in the database
+        boolean status = userRepository.findByEmail(emailId).isPresent();
+
+        return status;
     }
 
     public boolean matchCredentials (String emailID, String password) {
-        // TODO: Check password for the email
-        return true;
-    }
+        // Check password for the email
+        Optional<User> myUser = userRepository.findByEmail(emailID);
+        if (myUser.isPresent()) {
+            return myUser.get().getPassword().equals(password);
+        }
 
-    public boolean validateUser(String emailId, String password) {
-        if (!isEmailExist(emailId)) {
-            return false;
-        }
-        else if (matchCredentials(emailId, password)) {
-            return true;
-        }
         return false;
     }
 
+    public boolean validateUser(String emailId, String password) {
+        return isEmailExist(emailId) && matchCredentials(emailId, password);
+    }
+
     public UserResponse registerUser(UserRegisterRequest request) {
-        UserResponse userResponse = new UserResponse();
+        User user = new User();
+
         if (!isEmailExist(request.getEmail())) {
-            // TODO: Save user to the database
-            User user = new User();
+            // Save user to the database
+            user.setName(request.getName());
+            user.setEmail(request.getEmail());
+            user.setPassword(request.getPassword());
+            user.setRole("DEV");
+            user.setCreatedAt("WEB");
+
             userRepository.save(user);
 
             log.info("User registered successfully");
@@ -55,7 +65,8 @@ public class UserService {
             log.info("email id is not available");
         }
 
-        userResponse.setId(0L);
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(4L);
         userResponse.setName(request.getName());
         userResponse.setEmail(request.getEmail());
 
@@ -69,6 +80,14 @@ public class UserService {
         else {
             log.info("User does not exist");
         }
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
 }
