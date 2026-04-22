@@ -1,6 +1,7 @@
 package com.mittal.shopping.modules.user.controller;
 
 import com.mittal.shopping.common.response.ApiResponse;
+import com.mittal.shopping.modules.user.dto.LoginRequest;
 import com.mittal.shopping.modules.user.dto.UserRegisterRequest;
 import com.mittal.shopping.modules.user.dto.UserResponse;
 import com.mittal.shopping.modules.user.entity.User;
@@ -44,6 +45,16 @@ public class AuthController {
     public List<User> GetAllUsers() {
         var a = userService.getAllUsers();
         return a;
+    }
+
+    @PostMapping("/auth/login")
+    public ApiResponse<String> LoginUser(@Valid @RequestBody LoginRequest request) {
+        String message = userService.loginUser(request);
+        return new ApiResponse<>(
+                true,
+                message,
+                null
+        );
     }
 
 }

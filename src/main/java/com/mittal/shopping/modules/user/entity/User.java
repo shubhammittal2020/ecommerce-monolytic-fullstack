@@ -1,7 +1,6 @@
 package com.mittal.shopping.modules.user.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 
@@ -19,7 +18,7 @@ public class User {
     @Email
     @Column(unique = true, nullable = false)
     private String email;
-
+    
     private String password;
     private String role;
     private String createdAt;
