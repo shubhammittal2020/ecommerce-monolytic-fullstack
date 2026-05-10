@@ -1,5 +1,6 @@
 package com.mittal.shopping.modules.user.service;
 
+import com.mittal.shopping.common.security.JwtUtil;
 import com.mittal.shopping.modules.user.dto.LoginRequest;
 import com.mittal.shopping.modules.user.dto.UserRegisterRequest;
 import com.mittal.shopping.modules.user.dto.UserResponse;
@@ -24,6 +25,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public String loginUser(LoginRequest request) {
@@ -39,7 +43,7 @@ public class UserService {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        return "Login successful";
+        return jwtUtil.generateToken(user.getEmail());
     }
 
     public UserResponse registerUser(UserRegisterRequest request) {

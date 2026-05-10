@@ -6,6 +6,7 @@ import com.mittal.shopping.modules.user.dto.UserRegisterRequest;
 import com.mittal.shopping.modules.user.dto.UserResponse;
 import com.mittal.shopping.modules.user.entity.User;
 import com.mittal.shopping.modules.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,12 +50,20 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public ApiResponse<String> LoginUser(@Valid @RequestBody LoginRequest request) {
-        String message = userService.loginUser(request);
+        String token = userService.loginUser(request);
         return new ApiResponse<>(
                 true,
-                message,
-                null
+                "Login Successful",
+                token
         );
+    }
+
+    @GetMapping("/test")
+    public String test(HttpServletRequest request) {
+
+        String email = (String) request.getAttribute("email");
+
+        return "User from token: " + email;
     }
 
 }
