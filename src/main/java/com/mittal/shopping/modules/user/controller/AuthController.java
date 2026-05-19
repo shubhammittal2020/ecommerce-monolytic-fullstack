@@ -36,13 +36,13 @@ public class AuthController {
         );
     }
 
-    @GetMapping("/getUserByEmail")
+    @GetMapping("/user/getUserByEmail")
     public Optional<User> GetUserByEmail(@Valid @RequestBody String email) {
         var a = userService.getUserByEmail(email);
         return a;
     }
 
-    @GetMapping("/getAllUsers")
+    @GetMapping("/user/getAllUsers")
     public List<User> GetAllUsers() {
         var a = userService.getAllUsers();
         return a;
