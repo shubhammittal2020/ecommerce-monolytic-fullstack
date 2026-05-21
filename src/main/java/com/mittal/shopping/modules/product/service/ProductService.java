@@ -7,8 +7,14 @@ import com.mittal.shopping.modules.product.entity.Product;
 import com.mittal.shopping.modules.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -74,6 +80,24 @@ public class ProductService {
 
     }
 
+    public Page<ProductResponse> getAllProducts(
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> products = productRepository.findAll(pageable);
+
+        return products.map(this::mapToResponse);
+
+    }
+
     public ProductResponse updateProduct(Long id, ProductUpdateRequest request) {
 
         Product product = productRepository.findById(id)
@@ -107,12 +131,27 @@ public class ProductService {
 
     public List<ProductResponse> getProductsByCategory(String category) {
 
-        List<Product> products = productRepository.findByCategory(category);
+        List<Product> products = productRepository.findByCategoryIgnoreCase(category);
 
         return products.stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
 
+    public List<ProductResponse> searchProducts(String keyword) {
+        List<Product> products = productRepository.findByTitleContainingIgnoreCase(keyword);
+
+        return products.stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    public List<ProductResponse> filterByPrice(BigDecimal min, BigDecimal max) {
+        List<Product> products = productRepository.findByPriceBetween(min, max);
+
+        return products.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
 }
