@@ -33,7 +33,8 @@ public class SecurityConfig {
                                 "/api/user/**",
                                 "/api/cart/**",
                                 "/api/products/**",
-                                "/api/orders/**"
+                                "/api/orders/**",
+                                "/api/payments/**"
                         ).permitAll()
 
                         // Swagger APIs
