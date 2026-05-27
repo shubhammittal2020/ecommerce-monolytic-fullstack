@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@NotNull HttpServletRequest request) {
