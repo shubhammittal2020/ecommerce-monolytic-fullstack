@@ -1,6 +1,7 @@
 package com.mittal.shopping.modules.user.service;
 
 import com.mittal.shopping.common.security.JwtUtil;
+import com.mittal.shopping.modules.auth.enums.Role;
 import com.mittal.shopping.modules.user.dto.LoginRequest;
 import com.mittal.shopping.modules.user.dto.UserRegisterRequest;
 import com.mittal.shopping.modules.user.dto.UserResponse;
@@ -57,8 +58,7 @@ public class UserService {
             user.setName(request.getName());
             user.setEmail(request.getEmail());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setRole("DEV");
-            user.setCreatedAt("WEB");
+            user.setRole(Role.USER);
 
             userRepository.save(user);
 

@@ -1,12 +1,17 @@
 package com.mittal.shopping.modules.user.entity;
 
+import com.mittal.shopping.modules.auth.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 
-@Data
 @Entity
+@Table(name = "users")
+@Data
 public class User {
 
     @Id
@@ -20,7 +25,10 @@ public class User {
     private String email;
     
     private String password;
-    private String role;
-    private String createdAt;
+
+    private Role role;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 }

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class AuthController {
+public class UserController {
 
     private final UserService userService;
 
@@ -43,6 +44,7 @@ public class AuthController {
     }
 
     @GetMapping("/user/getAllUsers")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> GetAllUsers() {
         var a = userService.getAllUsers();
         return a;
