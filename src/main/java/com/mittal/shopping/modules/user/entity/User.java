@@ -1,6 +1,7 @@
 package com.mittal.shopping.modules.user.entity;
 
 import com.mittal.shopping.modules.auth.enums.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
@@ -26,6 +27,8 @@ public class User {
     
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     @CreationTimestamp

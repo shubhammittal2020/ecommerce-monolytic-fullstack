@@ -3,6 +3,7 @@ package com.mittal.shopping.common.security;
 import com.mittal.shopping.modules.user.entity.User;
 import com.mittal.shopping.modules.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +27,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .roles(user.getRole().name())
+                .authorities(
+                    new SimpleGrantedAuthority(
+                            "ROLE_" + user.getRole().name()
+                    )
+                )
                 .build();
 
     }

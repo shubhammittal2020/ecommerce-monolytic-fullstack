@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.mittal.shopping.modules.user.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,16 +74,41 @@ public class UserService {
         return userResponse;
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        Optional<User> a = userRepository.findByEmail(email);
-        if (a.isPresent()) {
-            return a;
-        }
-        return null;
+    public UserResponse getUserByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new RuntimeException("No user found with the email: " + email)
+                );
+
+        return mapToResponse(user);
+
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+
+        List<User> users = userRepository.findAll();
+
+        List<UserResponse> responses = new ArrayList<>();
+
+        for (User user : users) {
+            responses.add(mapToResponse(user));
+        }
+
+        return responses;
+
+    }
+
+    public UserResponse mapToResponse(User user) {
+
+        return UserResponse
+                .builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+
     }
 
 }

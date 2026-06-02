@@ -1,9 +1,7 @@
 package com.mittal.shopping.modules.cart.entity;
 
-import com.mittal.shopping.modules.product.entity.Product;
 import com.mittal.shopping.modules.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

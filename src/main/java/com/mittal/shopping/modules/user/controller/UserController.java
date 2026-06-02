@@ -4,18 +4,16 @@ import com.mittal.shopping.common.response.ApiResponse;
 import com.mittal.shopping.modules.user.dto.LoginRequest;
 import com.mittal.shopping.modules.user.dto.UserRegisterRequest;
 import com.mittal.shopping.modules.user.dto.UserResponse;
-import com.mittal.shopping.modules.user.entity.User;
 import com.mittal.shopping.modules.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api")
@@ -38,16 +36,32 @@ public class UserController {
     }
 
     @GetMapping("/user/getUserByEmail")
-    public Optional<User> GetUserByEmail(@Valid @RequestBody String email) {
-        var a = userService.getUserByEmail(email);
-        return a;
+    public ResponseEntity<UserResponse> GetUserByEmail(@Valid @RequestBody String email) {
+
+        UserResponse response = userService.getUserByEmail(email);
+
+        return ResponseEntity.ok(response);
+
+    }
+
+    @GetMapping("/debug")
+    public String debug(Authentication authentication) {
+
+        System.out.println("User: " + authentication.getName());
+        System.out.println("Roles: " + authentication.getAuthorities());
+
+        return authentication.getAuthorities().toString();
+
     }
 
     @GetMapping("/user/getAllUsers")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<User> GetAllUsers() {
-        var a = userService.getAllUsers();
-        return a;
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<UserResponse>> GetAllUsers() {
+
+        List<UserResponse> responses = userService.getAllUsers();
+
+        return ResponseEntity.ok(responses);
+
     }
 
     @PostMapping("/auth/login")
@@ -66,6 +80,7 @@ public class UserController {
         String email = (String) request.getAttribute("email");
 
         return "User from token: " + email;
+
     }
 
 }

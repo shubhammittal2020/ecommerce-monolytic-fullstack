@@ -1,12 +1,8 @@
 package com.mittal.shopping.modules.payment.controller;
 
-import com.mittal.shopping.modules.order.dto.OrderResponse;
-import com.mittal.shopping.modules.order.service.OrderService;
 import com.mittal.shopping.modules.payment.dto.PaymentResponse;
 import com.mittal.shopping.modules.payment.service.PaymentService;
 
-import com.mittal.shopping.modules.user.entity.User;
-import com.mittal.shopping.modules.user.service.UserService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
