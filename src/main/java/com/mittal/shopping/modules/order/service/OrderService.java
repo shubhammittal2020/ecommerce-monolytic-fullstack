@@ -1,5 +1,7 @@
 package com.mittal.shopping.modules.order.service;
 
+import com.mittal.shopping.common.exception.BusinessException;
+import com.mittal.shopping.common.exception.ResourceNotFoundException;
 import com.mittal.shopping.modules.cart.entity.Cart;
 import com.mittal.shopping.modules.cart.entity.CartItem;
 import com.mittal.shopping.modules.cart.repository.CartRepository;
@@ -35,18 +37,18 @@ public class OrderService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new RuntimeException("No user found")
+                        () -> new ResourceNotFoundException("User Not Found, Email: " + email)
                 );
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(
-                        () -> new RuntimeException("No cart found for the user: " + user)
+                        () -> new ResourceNotFoundException("Cart Not Found, User: " + user)
                 );
 
         List<CartItem> cartItems = cart.getCartItems();
 
         if (cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty");
+            throw new BusinessException("Cart is empty");
         }
 
         Order order = new Order();
@@ -85,7 +87,7 @@ public class OrderService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new RuntimeException("No user found")
+                        () -> new ResourceNotFoundException("User Not Found, Email: " + email)
                 );
 
         List<Order> orders = orderRepository.findByUser(user);

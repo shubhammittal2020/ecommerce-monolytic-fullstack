@@ -1,5 +1,6 @@
 package com.mittal.shopping.modules.product.service;
 
+import com.mittal.shopping.common.exception.ResourceNotFoundException;
 import com.mittal.shopping.modules.product.dto.ProductCreateRequest;
 import com.mittal.shopping.modules.product.dto.ProductResponse;
 import com.mittal.shopping.modules.product.dto.ProductUpdateRequest;
@@ -65,7 +66,7 @@ public class ProductService {
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(
-                        () -> new RuntimeException("Product Not Found")
+                        () -> new ResourceNotFoundException("Product Not Found, ID: " + productId)
                 );
 
         return mapToResponse(product);
@@ -103,7 +104,7 @@ public class ProductService {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Product Not Found")
+                        () -> new ResourceNotFoundException("Product Not Found, ID: " + id)
                 );
 
         product.setTitle(request.getTitle());
@@ -122,7 +123,7 @@ public class ProductService {
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(
-                        () -> new RuntimeException("Product Not Found")
+                        () -> new ResourceNotFoundException("Product Not Found, ID: " + productId)
                 );
 
         productRepository.delete(product);

@@ -1,5 +1,6 @@
 package com.mittal.shopping.modules.cart.service;
 
+import com.mittal.shopping.common.exception.ResourceNotFoundException;
 import com.mittal.shopping.modules.cart.dto.AddToCartRequest;
 import com.mittal.shopping.modules.cart.dto.CartItemResponse;
 import com.mittal.shopping.modules.cart.dto.CartSummaryResponse;
@@ -36,7 +37,7 @@ public class CartService {
         // Find User
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new RuntimeException("User not found")
+                        () -> new ResourceNotFoundException("User not found")
                 );
 
         // Find Existing Cart
@@ -45,7 +46,7 @@ public class CartService {
         // Find Product
         Product product = productRepository.findById(cartRequest.getProductId())
                 .orElseThrow(
-                        () -> new RuntimeException("Product not found")
+                        () -> new ResourceNotFoundException("Product not found")
                 );
 
         // If no cart exist
@@ -102,13 +103,13 @@ public class CartService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new RuntimeException("No Cart Found")
+                        () -> new ResourceNotFoundException("Cart Not Found")
                 );
 
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(
-                        () -> new RuntimeException("No Cart Found")
+                        () -> new ResourceNotFoundException("Cart Not Found")
                 );
 
         return mapToSummaryResponse(cart);
@@ -131,19 +132,19 @@ public class CartService {
         // Find User
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new RuntimeException("User not found")
+                        () -> new ResourceNotFoundException("User not found")
                 );
 
         // Find Existing Cart
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(
-                        () -> new RuntimeException("Cart not found")
+                        () -> new ResourceNotFoundException("Cart not found")
                 );
 
         // Find Product
         Product product = productRepository.findById(cartRequest.getProductId())
                 .orElseThrow(
-                        () -> new RuntimeException("Product not found")
+                        () -> new ResourceNotFoundException("Product not found")
                 );
 
         for (CartItem cartItem : cart.getCartItems()) {
@@ -166,7 +167,7 @@ public class CartService {
 
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(
-                        () -> new RuntimeException("Cart not found")
+                        () -> new ResourceNotFoundException("Cart not found")
                 );
 
         List<CartItem> cartItems = cart.getCartItems();
@@ -178,7 +179,7 @@ public class CartService {
         );
 
         if (!removed) {
-            throw new RuntimeException(
+            throw new ResourceNotFoundException(
                     "Product not found in cart"
             );
         }

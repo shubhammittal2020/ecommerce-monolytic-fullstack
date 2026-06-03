@@ -1,5 +1,7 @@
 package com.mittal.shopping.modules.payment.service;
 
+import com.mittal.shopping.common.exception.BusinessException;
+import com.mittal.shopping.common.exception.ResourceNotFoundException;
 import com.mittal.shopping.modules.order.entity.Order;
 import com.mittal.shopping.modules.order.enums.OrderStatus;
 import com.mittal.shopping.modules.order.repository.OrderRepository;
@@ -28,7 +30,7 @@ public class PaymentService {
 
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("No payment found with the id: " + id)
+                        () -> new ResourceNotFoundException("No payment found with the id: " + id)
                 );
 
         return mapToResponse(payment);
@@ -54,13 +56,13 @@ public class PaymentService {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(
-                        () -> new RuntimeException("No order found with the id " + orderId)
+                        () -> new ResourceNotFoundException("Order Not Found, ID: " + orderId)
                 );
 
         Optional<Payment> existingPayment = paymentRepository.findByOrder(order);
 
         if (existingPayment.isPresent()) {
-            throw new RuntimeException("Payment already exists for this order");
+            throw new BusinessException("Payment already exists, Order ID: " + orderId);
         }
 
         Payment payment = Payment
